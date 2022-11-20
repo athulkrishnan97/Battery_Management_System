@@ -6,6 +6,10 @@
     <string name="action_inbox" translatable="false">Inbox</string>
     <string name="action_summary" translatable="false">Summary</string>
     <string name="action_settings" translatable="false">Settings</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="battery_health_good">Good</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="battery_summary_temperature">Temperature</string>
+    <string name="battery_summary_voltage">Voltage</string>
+    <string name="battery_summary_health">Health</string>
+    <string name="battery_summary_technology">Technology</string>
 </resources>

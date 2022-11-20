@@ -48,7 +48,6 @@ public class MainTabLayout extends TabLayout {
      */
     public void createTabs() {
         addTab(R.drawable.ic_home_white_24dp, R.string.title_fragment_home);
-        addTab(R.drawable.ic_cellphone_android_white_24dp, R.string.title_fragment_device);
         addTab(R.drawable.ic_chart_areaspline_white_24dp, R.string.title_fragment_stats);
     }
 

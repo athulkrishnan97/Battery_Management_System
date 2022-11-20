@@ -32,13 +32,10 @@ import com.project.batterymanagementsystem.fragments.StatisticsFragment;
  */
 public class TabAdapter extends FragmentStatePagerAdapter {
 
-    public static final int NUM_TABS = 3;
+    public static final int NUM_TABS = 2;
 
     public static final int TAB_HOME      = 0;
-    public static final int TAB_MY_DEVICE = 1;
-    public static final int TAB_CHARTS    = 2;
-    //private static final int TAB_HISTORY   = 3;
-    // private static final int TAB_ABOUT     = 3;
+    public static final int TAB_CHARTS    = 1;
 
     private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 
@@ -68,14 +65,8 @@ public class TabAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case TAB_HOME:
                 return HomeFragment.newInstance("1","2");
-            case TAB_MY_DEVICE:
-                return DeviceFragment.newInstance("1","2");
             case TAB_CHARTS:
                 return StatisticsFragment.newInstance("1","2");
-//            case TAB_HISTORY:
-//                return HistoryFragment.newInstance();
-//            case TAB_ABOUT:
-//                return AboutFragment.newInstance();
             default:
                 return null;
         }
@@ -108,8 +99,6 @@ public class TabAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case TAB_HOME:
                 return "Home";
-            case TAB_MY_DEVICE:
-                return "My Device";
             case TAB_CHARTS:
                 return "Statistics";
             default:

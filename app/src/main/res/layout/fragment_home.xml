@@ -1,14 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:padding="@dimen/padding_normal">
+
+        <ProgressBar
+            android:id="@+id/batteryProgressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/progressbar_circular"
+            android:secondaryProgress="100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/batteryPercentageSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="%"
+            android:textSize="14sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/batteryCurrentValue"
+            app:layout_constraintBottom_toBottomOf="@+id/batteryCurrentValue"
+            app:layout_constraintLeft_toRightOf="@+id/batteryCurrentValue"
+            app:layout_constraintStart_toEndOf="@+id/batteryCurrentValue" />
+
+        <TextView
+            android:id="@+id/batteryCurrentValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50"
+            android:textColor="#000000"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@+id/batteryProgressbar"
+            app:layout_constraintEnd_toEndOf="@+id/batteryProgressbar"
+            app:layout_constraintStart_toStartOf="@+id/batteryProgressbar"
+            app:layout_constraintTop_toTopOf="@+id/batteryProgressbar" />
+
+        <TextView
+            android:id="@+id/batteryLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This a Text"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/batteryProgressbar"
+            app:layout_constraintStart_toStartOf="@+id/batteryProgressbar"
+            app:layout_constraintTop_toBottomOf="@+id/batteryProgressbar" />
+
+        <TextView
+            android:id="@+id/batteryCurrentNow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="This a Text"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batteryLabel" />
+
+        <TextView
+            android:id="@+id/batteryCurrentMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="min: --"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batteryCurrentNow" />
+
+        <TextView
+            android:id="@+id/batteryCurrentMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="max: --"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batteryCurrentNow" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batteryCurrentNow"
+            app:layout_constraintVertical_bias="0.24000001"></androidx.recyclerview.widget.RecyclerView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>
