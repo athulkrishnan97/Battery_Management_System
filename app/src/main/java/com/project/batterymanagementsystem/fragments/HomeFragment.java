@@ -129,18 +129,30 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
-
+    int updateDelay = 2000;
     double temp = 30;
     private void simulateData(){
         new Thread(() -> {
             while(true){
                 try {
-                    temp = temp + Math.random();
-                    Thread.sleep(3000);
-                    loadData(temp,5,65, ChargeType.SLOW);
-                    getActivity().runOnUiThread(() -> {
-                        mAdapter.swap(mBatteryCards);
-                    });
+                    while(temp<33){ // Fast charge
+                        temp = temp+Math.random();
+                        Thread.sleep(updateDelay);
+                        loadData(temp,15,65, ChargeType.FAST);
+                        updateUI();
+                    }
+                    while(temp>33 && temp<35){ //Average Charging
+                        temp = temp+(Math.random()/2);
+                        Thread.sleep(updateDelay);
+                        loadData(temp,9,65, ChargeType.AVERAGE);
+                        updateUI();
+                    }
+                    while (temp>27){ //Slow Charging
+                        temp = temp-Math.random();
+                        Thread.sleep(updateDelay);
+                        loadData(temp,5,65, ChargeType.SLOW);
+                        updateUI();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -150,18 +162,27 @@ public class HomeFragment extends Fragment {
         }).start();
     }
 
+    public void updateUI(){
+        getActivity().runOnUiThread(() -> {
+            mAdapter.swap(mBatteryCards);
+        });
+    }
+
     private void setBatteryLevel(int percentage){
         mBatteryCircleBar.setProgress(percentage);
         mBatteryPercentage.setText(""+percentage);
 
     }
 
-    private void loadData(double temp, float voltage, int health, ChargeType type) {
+    private void loadData(double temp, double voltage, int health, ChargeType type) {
         mBatteryCards = new ArrayList<>();
         String outTemp = temp + " ºC";
         int color = Color.GREEN;
         if (temp > 35) {
             color = Color.RED;
+        }
+        else if(temp > 33 && temp< 35){
+            color = Color.YELLOW;
         }
         mBatteryCards.add(
                 new BatteryCard(
@@ -174,11 +195,22 @@ public class HomeFragment extends Fragment {
 
         // Voltage
         String voltageOut = voltage + " V";
+        int voltageColor = Color.BLACK;
+        if(voltage == 15){
+            voltageColor = Color.GREEN;
+        }
+        else if(voltage == 9){
+            voltageColor = Color.YELLOW;
+        }
+        else if(voltage == 5){
+            voltageColor = Color.RED;
+        }
         mBatteryCards.add(
                 new BatteryCard(
                         R.drawable.ic_flash_black_18dp,
                         getString(R.string.battery_summary_voltage),
-                        voltageOut
+                        voltageOut,
+                        voltageColor
                 )
         );
 
@@ -205,15 +237,25 @@ public class HomeFragment extends Fragment {
                         R.drawable.ic_wrench_black_18dp,
                         getString(R.string.battery_summary_technology),
                         "Li-ion",
-                        color
+                        Color.GREEN
                 )
         );
+        int rateColor = Color.BLACK;
+        if(voltage == 15){
+            rateColor = Color.GREEN;
+        }
+        else if(voltage == 9){
+            rateColor = Color.YELLOW;
+        }
+        else if(voltage == 5){
+            rateColor = Color.RED;
+        }
         mBatteryCards.add(
                 new BatteryCard(
                         R.drawable.ic_charging_black,
                         getString(R.string.charge_rate),
                         type.name,
-                        color
+                        rateColor
                 )
         );
     }
