@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.batterymanagementsystem.R;
@@ -38,7 +39,7 @@ public class BatteryRVAdapter extends RecyclerView.Adapter<BatteryRVAdapter.Dash
         public ImageView icon;
         public TextView label;
         public TextView value;
-        //public View indicator;
+        public ImageView circle;
 
         DashboardViewHolder(View itemView) {
             super(itemView);
@@ -46,7 +47,7 @@ public class BatteryRVAdapter extends RecyclerView.Adapter<BatteryRVAdapter.Dash
             icon = itemView.findViewById(R.id.icon);
             label = itemView.findViewById(R.id.label);
             value = itemView.findViewById(R.id.value);
-            //indicator = itemView.findViewById(R.id.indicator);
+            circle = itemView.findViewById(R.id.circle);
         }
     }
 
@@ -76,7 +77,7 @@ public class BatteryRVAdapter extends RecyclerView.Adapter<BatteryRVAdapter.Dash
         viewHolder.icon.setImageResource(mBatteryCards.get(i).icon);
         viewHolder.label.setText(mBatteryCards.get(i).label);
         viewHolder.value.setText(mBatteryCards.get(i).value);
-        //viewHolder.indicator.setBackgroundColor(mBatteryCards.get(i).indicator);
+        viewHolder.circle.setColorFilter(mBatteryCards.get(i).indicator);
     }
 
     @Override

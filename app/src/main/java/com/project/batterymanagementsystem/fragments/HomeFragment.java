@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.project.batterymanagementsystem.MainActivity;
 import com.project.batterymanagementsystem.R;
 import com.project.batterymanagementsystem.adapters.BatteryRVAdapter;
+import com.project.batterymanagementsystem.enums.ChargeType;
 import com.project.batterymanagementsystem.ui.BatteryCard;
 
 import java.util.ArrayList;
@@ -46,10 +47,6 @@ public class HomeFragment extends Fragment {
     private TextView mBatteryCurrentMax;
 
     private ProgressBar mBatteryCircleBar;
-
-    private double mMin;
-
-    private double mMax;
 
     private Handler mHandler;
 
@@ -122,99 +119,113 @@ public class HomeFragment extends Fragment {
         mBatteryCircleBar = view.findViewById(R.id.batteryProgressbar);
 
         mBatteryCurrentNow = view.findViewById(R.id.batteryCurrentNow);
-        mBatteryCurrentMin = view.findViewById(R.id.batteryCurrentMin);
-        mBatteryCurrentMax = view.findViewById(R.id.batteryCurrentMax);
+        loadData(30,5,65, ChargeType.SLOW);
 
-        mMin = Integer.MAX_VALUE;
-        mMax = 0;
+        setAdapter();
+        simulateData();
         mHandler = new Handler();
         //mHandler.postDelayed(mRunnable, 5000);
-        loadData();
         setBatteryLevel(88);
-        return view;
 
+        return view;
+    }
+
+    double temp = 30;
+    private void simulateData(){
+        new Thread(() -> {
+            while(true){
+                try {
+                    temp = temp + Math.random();
+                    Thread.sleep(3000);
+                    loadData(temp,5,65, ChargeType.SLOW);
+                    getActivity().runOnUiThread(() -> {
+                        mAdapter.swap(mBatteryCards);
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }).start();
     }
 
     private void setBatteryLevel(int percentage){
-        mBatteryCircleBar.setProgress(65);
+        mBatteryCircleBar.setProgress(percentage);
         mBatteryPercentage.setText(""+percentage);
 
     }
 
-    private void loadData() {
-        mLocalThread = new Thread(new Runnable() {
-            public void run() {
-                mBatteryCards = new ArrayList<>();
-                String value;
-                int color = Color.GREEN;
+    private void loadData(double temp, float voltage, int health, ChargeType type) {
+        mBatteryCards = new ArrayList<>();
+        String outTemp = temp + " ºC";
+        int color = Color.GREEN;
+        if (temp > 35) {
+            color = Color.RED;
+        }
+        mBatteryCards.add(
+                new BatteryCard(
+                        R.drawable.ic_thermometer_black_18dp,
+                        getString(R.string.battery_summary_temperature),
+                        outTemp.substring(0,4),
+                        color
+                )
+        );
 
-                // Temperature
-                float temperature = 31;
-                value = temperature + " ºC";
-                if (temperature > 45) {
-                    color = Color.RED;
-                } else if (temperature <= 45 && temperature > 35) {
-                    color = Color.YELLOW;
-                }
-                mBatteryCards.add(
-                        new BatteryCard(
-                                R.drawable.ic_thermometer_black_18dp,
-                                getString(R.string.battery_summary_temperature),
-                                value,
-                                color
-                        )
-                );
+        // Voltage
+        String voltageOut = voltage + " V";
+        mBatteryCards.add(
+                new BatteryCard(
+                        R.drawable.ic_flash_black_18dp,
+                        getString(R.string.battery_summary_voltage),
+                        voltageOut
+                )
+        );
 
-                // Voltage
-                value = 3.7 + " V";
-                mBatteryCards.add(
-                        new BatteryCard(
-                                R.drawable.ic_flash_black_18dp,
-                                getString(R.string.battery_summary_voltage),
-                                value
-                        )
-                );
+        // Health
+        String healthOut = health + " %";
+        int healthColor;
+        if (health > 85) {
+            healthColor = Color.GREEN;
+        } else {
+            healthColor = Color.RED;
+        }
 
-                // Health
-                value = "Dead"; //estimator.getHealthStatus(mContext);
-                //color = value.equals(mContext.getString(R.string.battery_health_good)) ?
-                        //Color.GREEN : Color.RED;
-                mBatteryCards.add(
-                        new BatteryCard(
-                                R.drawable.ic_heart_black_18dp,
-                                getString(R.string.battery_summary_health),
-                                value,
-                                Color.GREEN
-                        )
-                );
+        mBatteryCards.add(
+                new BatteryCard(
+                        R.drawable.ic_heart_black_18dp,
+                        getString(R.string.battery_summary_health),
+                        healthOut,
+                        healthColor
+                )
+        );
 
-                mBatteryCards.add(
-                        new BatteryCard(
-                                R.drawable.ic_wrench_black_18dp,
-                                getString(R.string.battery_summary_technology),
-                                "Li-ion",
-                                color
-                        )
-                );
-            }
-        });
-
-        mLocalThread.start();
-        setAdapter();
+        mBatteryCards.add(
+                new BatteryCard(
+                        R.drawable.ic_wrench_black_18dp,
+                        getString(R.string.battery_summary_technology),
+                        "Li-ion",
+                        color
+                )
+        );
+        mBatteryCards.add(
+                new BatteryCard(
+                        R.drawable.ic_charging_black,
+                        getString(R.string.charge_rate),
+                        type.name,
+                        color
+                )
+        );
     }
 
     private void setAdapter() {
-        try {
-            mLocalThread.join();
-            if (mAdapter == null) {
-                mAdapter = new BatteryRVAdapter(mBatteryCards);
-                mRecyclerView.setAdapter(mAdapter);
-            } else {
-                mAdapter.swap(mBatteryCards);
-            }
-            mRecyclerView.invalidate();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        if (mAdapter == null) {
+            mAdapter = new BatteryRVAdapter(mBatteryCards);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.swap(mBatteryCards);
         }
+        mRecyclerView.invalidate();
     }
 }

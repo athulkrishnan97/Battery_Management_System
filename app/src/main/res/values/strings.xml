@@ -8,8 +8,9 @@
     <string name="action_settings" translatable="false">Settings</string>
     <string name="battery_health_good">Good</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="battery_summary_temperature">Temperature</string>
-    <string name="battery_summary_voltage">Voltage</string>
+    <string name="battery_summary_temperature">Current Temperature</string>
+    <string name="battery_summary_voltage">Input Voltage</string>
     <string name="battery_summary_health">Health</string>
     <string name="battery_summary_technology">Technology</string>
+    <string name="charge_rate">Charge Rate</string>
 </resources>
