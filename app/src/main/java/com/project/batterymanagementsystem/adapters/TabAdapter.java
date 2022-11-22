@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2016 Hugo Matalonga & João Paulo Fernandes
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.project.batterymanagementsystem.adapters;
 
 import android.app.Fragment;
@@ -23,7 +7,6 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.project.batterymanagementsystem.fragments.DeviceFragment;
 import com.project.batterymanagementsystem.fragments.HomeFragment;
 import com.project.batterymanagementsystem.fragments.StatisticsFragment;
 
@@ -45,13 +28,9 @@ public class TabAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public void restoreState(Parcelable state, ClassLoader loader) {
-        // work around "Fragment no longer exists for key" Android bug
-        // by catching the IllegalStateException
-        // https://code.google.com/p/android/issues/detail?id=42601
         try {
             super.restoreState(state, loader);
-        } catch (IllegalStateException e) {
-            // nop
+        } catch (IllegalStateException ignored) {
         }
     }
 
@@ -85,28 +64,5 @@ public class TabAdapter extends FragmentStatePagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         mFragments.remove(position);
         super.destroyItem(container, position, object);
-    }
-
-    public Fragment getFragment(int position) {
-        if (isValidPosition(position)) {
-            return mFragments.get(position);
-        } else {
-            return null;
-        }
-    }
-
-    public String getTabName(int position) {
-        switch (position) {
-            case TAB_HOME:
-                return "Home";
-            case TAB_CHARTS:
-                return "Statistics";
-            default:
-                return "default";
-        }
-    }
-
-    private boolean isValidPosition(int position) {
-        return (position >= 0 && position < NUM_TABS);
     }
 }

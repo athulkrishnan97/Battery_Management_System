@@ -19,10 +19,13 @@ import com.project.batterymanagementsystem.MainActivity;
 import com.project.batterymanagementsystem.R;
 import com.project.batterymanagementsystem.adapters.BatteryRVAdapter;
 import com.project.batterymanagementsystem.enums.ChargeType;
+import com.project.batterymanagementsystem.interfaces.SimulationListener;
+import com.project.batterymanagementsystem.simulation.Simulator;
 import com.project.batterymanagementsystem.ui.BatteryCard;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,25 +35,11 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
     private Context mContext;
     private RecyclerView mRecyclerView;
-    private MainActivity mActivity;
     private ArrayList<BatteryCard> mBatteryCards;
-    private Thread mLocalThread;
-
     private BatteryRVAdapter mAdapter;
-
     private TextView mBatteryPercentage;
-
-    private TextView mBatteryCurrentNow;
-
-    private TextView mBatteryCurrentMin;
-
-    private TextView mBatteryCurrentMax;
-
     private ProgressBar mBatteryCircleBar;
-
-    private Handler mHandler;
-
-    private String mActivePower;
+    private TextView mBatteryCurrentNow;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -98,10 +87,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view =  inflater.inflate(R.layout.fragment_home, container, false);
+        final View view = inflater.inflate(R.layout.fragment_home, container, false);
         mContext = view.getContext();
-        mActivity = (MainActivity) getActivity();
-
         mRecyclerView = view.findViewById(R.id.rv);
 
 
@@ -119,76 +106,49 @@ public class HomeFragment extends Fragment {
         mBatteryCircleBar = view.findViewById(R.id.batteryProgressbar);
 
         mBatteryCurrentNow = view.findViewById(R.id.batteryCurrentNow);
-        loadData(30,5,65, ChargeType.SLOW);
-
+        loadData(30, 5, 65, ChargeType.SLOW);
         setAdapter();
-        simulateData();
-        mHandler = new Handler();
-        //mHandler.postDelayed(mRunnable, 5000);
-        setBatteryLevel(88);
+        simulateData(1500,27,86);
 
         return view;
     }
-    int updateDelay = 2000;
-    double temp = 30;
-    private void simulateData(){
-        new Thread(() -> {
-            while(true){
-                try {
-                    while(temp<33){ // Fast charge
-                        temp = temp+Math.random();
-                        Thread.sleep(updateDelay);
-                        loadData(temp,15,65, ChargeType.FAST);
-                        updateUI();
-                    }
-                    while(temp>33 && temp<35){ //Average Charging
-                        temp = temp+(Math.random()/2);
-                        Thread.sleep(updateDelay);
-                        loadData(temp,9,65, ChargeType.AVERAGE);
-                        updateUI();
-                    }
-                    while (temp>27){ //Slow Charging
-                        temp = temp-Math.random();
-                        Thread.sleep(updateDelay);
-                        loadData(temp,5,65, ChargeType.SLOW);
-                        updateUI();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    double batteryLevel = 35;
 
-
-            }
+    private void simulateData(int updateDelay, double temp, int health) {
+        new Thread(new SimulationRunnable(updateDelay, temp, health) {
         }).start();
     }
 
-    public void updateUI(){
-        getActivity().runOnUiThread(() -> {
+    public void updateUI(double increment) {
+        requireActivity().runOnUiThread(() -> {
+            if (batteryLevel < 95) {
+                batteryLevel = batteryLevel + increment;
+            }
+            setBatteryLevel((int)batteryLevel);
             mAdapter.swap(mBatteryCards);
         });
     }
 
-    private void setBatteryLevel(int percentage){
+    private void setBatteryLevel(int percentage) {
         mBatteryCircleBar.setProgress(percentage);
-        mBatteryPercentage.setText(""+percentage);
+        mBatteryPercentage.setText("" + percentage);
 
     }
 
     private void loadData(double temp, double voltage, int health, ChargeType type) {
         mBatteryCards = new ArrayList<>();
-        String outTemp = temp + " ºC";
+        String outTemp = round(temp,1) + " ºC";
         int color = Color.GREEN;
         if (temp > 35) {
             color = Color.RED;
-        }
-        else if(temp > 33 && temp< 35){
+        } else if (temp > 33 && temp < 35) {
             color = Color.YELLOW;
         }
         mBatteryCards.add(
                 new BatteryCard(
                         R.drawable.ic_thermometer_black_18dp,
                         getString(R.string.battery_summary_temperature),
-                        outTemp.substring(0,4),
+                        outTemp,
                         color
                 )
         );
@@ -196,13 +156,11 @@ public class HomeFragment extends Fragment {
         // Voltage
         String voltageOut = voltage + " V";
         int voltageColor = Color.BLACK;
-        if(voltage == 15){
+        if (voltage == 15) {
             voltageColor = Color.GREEN;
-        }
-        else if(voltage == 9){
+        } else if (voltage == 9) {
             voltageColor = Color.YELLOW;
-        }
-        else if(voltage == 5){
+        } else if (voltage == 5) {
             voltageColor = Color.RED;
         }
         mBatteryCards.add(
@@ -241,13 +199,11 @@ public class HomeFragment extends Fragment {
                 )
         );
         int rateColor = Color.BLACK;
-        if(voltage == 15){
+        if (voltage == 15) {
             rateColor = Color.GREEN;
-        }
-        else if(voltage == 9){
+        } else if (voltage == 9) {
             rateColor = Color.YELLOW;
-        }
-        else if(voltage == 5){
+        } else if (voltage == 5) {
             rateColor = Color.RED;
         }
         mBatteryCards.add(
@@ -269,5 +225,34 @@ public class HomeFragment extends Fragment {
             mAdapter.swap(mBatteryCards);
         }
         mRecyclerView.invalidate();
+    }
+
+    public class SimulationRunnable implements Runnable{
+        int updateDelay;
+        double temp;
+        int health;
+
+        public SimulationRunnable(int updateDelay, double temp, int health) {
+            this.updateDelay = updateDelay;
+            this.temp = temp;
+            this.health = health;
+        }
+
+        @Override
+        public void run() {
+            Simulator simulator = new Simulator();
+            simulator.setChangeListener(new SimulationListener() {
+                @Override
+                public void onStatusChange(double temp, double voltage, int health, ChargeType type, double increment ) {
+                    loadData(temp, voltage, health, type);
+                    updateUI(increment);
+                }
+            });
+            simulator.simulateData(updateDelay,temp,health);
+        }
+    }
+    private double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
     }
 }
