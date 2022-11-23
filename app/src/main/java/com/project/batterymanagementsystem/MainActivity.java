@@ -12,6 +12,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity{
     private ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +21,6 @@ public class MainActivity extends AppCompatActivity{
         Objects.requireNonNull(getSupportActionBar()).setTitle("Battery Management System");
         loadViews();
     }
-
 
     private void loadViews() {
         mViewPager = findViewById(R.id.viewpager);

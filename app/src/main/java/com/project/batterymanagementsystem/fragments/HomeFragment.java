@@ -4,18 +4,19 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.project.batterymanagementsystem.MainActivity;
+import com.google.android.material.snackbar.Snackbar;
 import com.project.batterymanagementsystem.R;
 import com.project.batterymanagementsystem.adapters.BatteryRVAdapter;
 import com.project.batterymanagementsystem.enums.ChargeType;
@@ -24,8 +25,6 @@ import com.project.batterymanagementsystem.simulation.Simulator;
 import com.project.batterymanagementsystem.ui.BatteryCard;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +39,7 @@ public class HomeFragment extends Fragment {
     private TextView mBatteryPercentage;
     private ProgressBar mBatteryCircleBar;
     private TextView mBatteryCurrentNow;
+    private ConstraintLayout mRelativeLayout;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -104,6 +104,8 @@ public class HomeFragment extends Fragment {
 
         mBatteryPercentage = view.findViewById(R.id.batteryCurrentValue);
         mBatteryCircleBar = view.findViewById(R.id.batteryProgressbar);
+        mRelativeLayout = view.findViewById(R.id.constraintLayout);
+
 
         mBatteryCurrentNow = view.findViewById(R.id.batteryCurrentNow);
         loadData(30, 5, 65, ChargeType.SLOW);
@@ -119,14 +121,37 @@ public class HomeFragment extends Fragment {
         }).start();
     }
 
-    public void updateUI(double increment) {
+    public void updateUI(double increment, ChargeType newType) {
         requireActivity().runOnUiThread(() -> {
             if (batteryLevel < 95) {
                 batteryLevel = batteryLevel + increment;
             }
             setBatteryLevel((int)batteryLevel);
             mAdapter.swap(mBatteryCards);
+            if(currentChargeType!= newType){
+                notifyChargeType(currentChargeType, newType);
+                currentChargeType = newType;
+            }
         });
+    }
+
+    private void notifyChargeType(ChargeType currentChargeType, ChargeType newType) {
+        if(currentChargeType == ChargeType.FAST && newType == ChargeType.AVERAGE){
+            showSnackBar(getString(R.string.fast_to_average));
+        }
+        else if(currentChargeType == ChargeType.AVERAGE && newType == ChargeType.SLOW){
+            showSnackBar(getString(R.string.average_to_slow));
+        }
+        else if(currentChargeType == ChargeType.SLOW && newType == ChargeType.FAST){
+            showSnackBar(getString(R.string.slow_to_fast));
+        }
+    }
+
+    private void showSnackBar(String text) {
+        Snackbar snackbar = Snackbar
+                .make(mRelativeLayout, text, Snackbar.LENGTH_LONG)
+                .setDuration(3000);
+        snackbar.show();
     }
 
     private void setBatteryLevel(int percentage) {
@@ -227,6 +252,7 @@ public class HomeFragment extends Fragment {
         mRecyclerView.invalidate();
     }
 
+    ChargeType currentChargeType = ChargeType.FAST;
     public class SimulationRunnable implements Runnable{
         int updateDelay;
         double temp;
@@ -243,9 +269,9 @@ public class HomeFragment extends Fragment {
             Simulator simulator = new Simulator();
             simulator.setChangeListener(new SimulationListener() {
                 @Override
-                public void onStatusChange(double temp, double voltage, int health, ChargeType type, double increment ) {
+                public void onStatusChange(double temp, double voltage, int health, ChargeType type, double increment) {
                     loadData(temp, voltage, health, type);
-                    updateUI(increment);
+                    updateUI(increment,type);
                 }
             });
             simulator.simulateData(updateDelay,temp,health);

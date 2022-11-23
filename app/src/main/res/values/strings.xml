@@ -13,4 +13,7 @@
     <string name="battery_summary_health">Health</string>
     <string name="battery_summary_technology">Technology</string>
     <string name="charge_rate">Charge Rate</string>
+    <string name="fast_to_average">Average charging as battery temperature greater than 33ºC.</string>
+    <string name="average_to_slow">Slow charging as battery temperature greater than 35ºC.</string>
+    <string name="slow_to_fast">Fast charging as battery temperature less than 27ºC.</string>
 </resources>
