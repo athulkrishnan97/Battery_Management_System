@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
-                getSupportActionBar().setTitle(tab.getContentDescription());
+                Objects.requireNonNull(getSupportActionBar()).setTitle(tab.getContentDescription());
             }
 
             @Override

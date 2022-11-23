@@ -23,46 +23,6 @@ public class SimulationTests {
     Simulator simulator = new Simulator();
 
     @Test
-    public void ifTemp30ThenVoltageShouldBe15() throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<Double> future = new CompletableFuture<>();
-        new Thread(() -> {
-            simulator.setChangeListener((temp, voltage, health, type, increment) -> {
-                future.complete(voltage);
-            });
-            simulator.simulateData(DEFAULT_DELAY, 30, DEFAULT_HEALTH);
-        }).start();
-        Double result = future.get(3, TimeUnit.SECONDS);
-        assertEquals(15.0, (double) result, 0);
-    }
-
-
-    @Test
-    public void ifTemp34ThenVoltageShouldBe9() throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<Double> future = new CompletableFuture<>();
-        new Thread(() -> {
-            simulator.setChangeListener((temp, voltage, health, type, increment) -> {
-                future.complete(voltage);
-            });
-            simulator.simulateData(DEFAULT_DELAY, 34, DEFAULT_HEALTH);
-        }).start();
-        Double result = future.get(3, TimeUnit.SECONDS);
-        assertEquals(9.0, (double) result, 0);
-    }
-
-    @Test
-    public void ifTemp35ThenVoltageShouldBe5() throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<Double> future = new CompletableFuture<>();
-        new Thread(() -> {
-            simulator.setChangeListener((temp, voltage, health, type, increment) -> {
-                future.complete(voltage);
-            });
-            simulator.simulateData(DEFAULT_DELAY, 35, DEFAULT_HEALTH);
-        }).start();
-        Double result = future.get(3, TimeUnit.SECONDS);
-        assertEquals(5.0, (double) result, 0);
-    }
-
-    @Test
     public void ifTemp30ThenChargeRateShouldBeFast() throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<ChargeType> future = new CompletableFuture<>();
         new Thread(() -> {

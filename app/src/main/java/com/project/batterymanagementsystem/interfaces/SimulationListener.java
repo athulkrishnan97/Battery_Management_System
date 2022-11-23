@@ -4,5 +4,5 @@ import com.project.batterymanagementsystem.enums.ChargeType;
 
 public interface SimulationListener {
 
-    public void onStatusChange(double temp, double voltage, int health, ChargeType type, double increment);
+    void onStatusChange(double temp, double voltage, int health, ChargeType type, double increment);
 }
