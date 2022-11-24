@@ -160,47 +160,6 @@ public class HomeFragment extends Fragment {
 
     }
     
-    private void setAdapter() {
-
-        if (mAdapter == null) {
-            mAdapter = new BatteryRVAdapter(mBatteryCards);
-            mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.swap(mBatteryCards);
-        }
-        mRecyclerView.invalidate();
-    }
-
-    ChargeType currentChargeType = ChargeType.FAST;
-    public class SimulationRunnable implements Runnable{
-        int updateDelay;
-        double temp;
-        int health;
-
-        public SimulationRunnable(int updateDelay, double temp, int health) {
-            this.updateDelay = updateDelay;
-            this.temp = temp;
-            this.health = health;
-        }
-
-        @Override
-        public void run() {
-            Simulator simulator = new Simulator();
-            simulator.setChangeListener(new SimulationListener() {
-                @Override
-                public void onStatusChange(double temp, double voltage, int health, ChargeType type, double increment) {
-                    loadData(temp, voltage, health, type);
-                    updateUI(increment,type);
-                }
-            });
-            simulator.simulateData(updateDelay,temp,health);
-        }
-    }
-    private double round (double value, int precision) {
-        int scale = (int) Math.pow(10, precision);
-        return (double) Math.round(value * scale) / scale;
-    }
-}
 
     private void loadData(double temp, double voltage, int health, ChargeType type) {
         mBatteryCards = new ArrayList<>();
@@ -283,4 +242,46 @@ public class HomeFragment extends Fragment {
         );
     }
 
+    
+    private void setAdapter() {
+
+        if (mAdapter == null) {
+            mAdapter = new BatteryRVAdapter(mBatteryCards);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.swap(mBatteryCards);
+        }
+        mRecyclerView.invalidate();
+    }
+
+    ChargeType currentChargeType = ChargeType.FAST;
+    public class SimulationRunnable implements Runnable{
+        int updateDelay;
+        double temp;
+        int health;
+
+        public SimulationRunnable(int updateDelay, double temp, int health) {
+            this.updateDelay = updateDelay;
+            this.temp = temp;
+            this.health = health;
+        }
+
+        @Override
+        public void run() {
+            Simulator simulator = new Simulator();
+            simulator.setChangeListener(new SimulationListener() {
+                @Override
+                public void onStatusChange(double temp, double voltage, int health, ChargeType type, double increment) {
+                    loadData(temp, voltage, health, type);
+                    updateUI(increment,type);
+                }
+            });
+            simulator.simulateData(updateDelay,temp,health);
+        }
+    }
+    private double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
+    }
+}
     
