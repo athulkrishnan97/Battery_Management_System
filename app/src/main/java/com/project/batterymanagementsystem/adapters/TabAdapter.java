@@ -10,9 +10,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.project.batterymanagementsystem.fragments.HomeFragment;
 import com.project.batterymanagementsystem.fragments.StatisticsFragment;
 
-/**
- * Adapter that provides fragments for tab menus.
- */
+// Tab adaptor to include tabs on user interface
+
 public class TabAdapter extends FragmentStatePagerAdapter {
 
     public static final int NUM_TABS = 2;
