@@ -22,6 +22,21 @@ public class SimulationTests {
     private static final int DEFAULT_HEALTH = 65;
     Simulator simulator = new Simulator();
 //test
+    /*
+    @Test
+    public void ifTempNeg() throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<ChargeType> future = new CompletableFuture<>();
+        new Thread(() -> {
+            simulator.setChangeListener((temp, voltage, health, type, increment) -> {
+                future.complete(type);
+            });
+            simulator.simulateData(DEFAULT_DELAY, -30, DEFAULT_HEALTH);
+        }).start();
+        ChargeType result = future.get(3, TimeUnit.SECONDS);
+        //
+    }
+    */
+//test
     @Test
     public void ifTemp30ThenChargeRateShouldBeFast() throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<ChargeType> future = new CompletableFuture<>();
@@ -61,4 +76,19 @@ public class SimulationTests {
         ChargeType result = future.get(3, TimeUnit.SECONDS);
         assertEquals(ChargeType.SLOW, result);
     }
+//test
+    /*
+    @Test
+    public void ifTempVeryHigh() throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<ChargeType> future = new CompletableFuture<>();
+        new Thread(() -> {
+            simulator.setChangeListener((temp, voltage, health, type, increment) -> {
+                future.complete(type);
+            });
+            simulator.simulateData(DEFAULT_DELAY, 300, DEFAULT_HEALTH);
+        }).start();
+        ChargeType result = future.get(3, TimeUnit.SECONDS);
+        //
+    }
+    */
 }
