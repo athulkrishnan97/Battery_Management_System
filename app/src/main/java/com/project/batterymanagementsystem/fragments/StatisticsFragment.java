@@ -10,11 +10,8 @@ import android.view.ViewGroup;
 
 import com.project.batterymanagementsystem.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link StatisticsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+//To implement the statistics tab in the user interface---  implementation in progress
+
 public class StatisticsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
