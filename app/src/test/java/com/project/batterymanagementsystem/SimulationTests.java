@@ -21,7 +21,7 @@ public class SimulationTests {
     private static final int DEFAULT_DELAY = 1500;
     private static final int DEFAULT_HEALTH = 65;
     Simulator simulator = new Simulator();
-
+//test1
     @Test
     public void ifTemp30ThenChargeRateShouldBeFast() throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<ChargeType> future = new CompletableFuture<>();
@@ -35,7 +35,7 @@ public class SimulationTests {
         assertEquals(ChargeType.FAST, result);
     }
 
-
+//Test2
     @Test
     public void ifTemp34ThenChargeRateShouldBeAverage() throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<ChargeType> future = new CompletableFuture<>();
@@ -48,7 +48,7 @@ public class SimulationTests {
         ChargeType result = future.get(3, TimeUnit.SECONDS);
         assertEquals(ChargeType.AVERAGE, result);
     }
-
+//Test3
     @Test
     public void ifTemp35ThenChargeRateShouldBeSlow() throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<ChargeType> future = new CompletableFuture<>();
