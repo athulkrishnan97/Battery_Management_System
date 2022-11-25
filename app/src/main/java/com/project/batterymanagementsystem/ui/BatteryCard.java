@@ -2,6 +2,7 @@
 package com.project.batterymanagementsystem.ui;
 
 import androidx.annotation.DrawableRes;
+// To implement components of the user interface
 
 public class BatteryCard {
     public int icon;
