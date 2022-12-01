@@ -90,5 +90,13 @@ public class SimulationTests {
         ChargeType result = future.get(3, TimeUnit.SECONDS);
         //
     }
+    CompletableFuture<ChargeType> future = new CompletableFuture<>();
+        new Thread(() -> {
+            simulator.setChangeListener((temp, voltage, health, type, increment) -> {
+                future.complete(type);
+            });
+            simulator.simulateData(DEFAULT_DELAY, 300, DEFAULT_HEALTH);
+        }).start();
+        ChargeType result = future.get(3, TimeUnit.SECONDS);
     */
 }
