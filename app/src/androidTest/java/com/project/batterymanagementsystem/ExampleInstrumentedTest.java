@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 /**
  * Instrumented test, to be executed on Abdroid device
- *
+ * commented lines
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 
