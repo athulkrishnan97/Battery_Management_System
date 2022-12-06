@@ -12,6 +12,8 @@ import com.project.batterymanagementsystem.ui.BatteryCard;
 
 import java.util.ArrayList;
 
+//For UI implementation
+
 public class BatteryRVAdapter extends RecyclerView.Adapter<BatteryRVAdapter.DashboardViewHolder> {
 
     static class DashboardViewHolder extends RecyclerView.ViewHolder {

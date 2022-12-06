@@ -35,6 +35,8 @@ import java.util.ArrayList;
  * Use the {@link StatisticsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+//To implement the statistics tab in the user interface---  implementation in progress
+
 public class StatisticsFragment extends Fragment {
 
     protected Typeface tfRegular;
